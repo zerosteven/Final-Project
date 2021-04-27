@@ -4,10 +4,11 @@ import os
 from bs4 import BeautifulSoup
 import requests
 import re
+from cache import *
 
 API_KEY_temp = "bf4b8fabdbc444da93c141445212504"
-API_KEY_
-API_KEY_
+#API_KEY_
+#API_KEY_
 
 
 def create_request_url_for_temp(date):
@@ -20,7 +21,6 @@ def create_request_url_for_temp(date):
 
 def fetch_data_temp(CACHE_FNAME,cache_dict, datetime, url):
     cache_dict = read_cache(CACHE_FNAME)
-    
     r = requests.get(url)
     print(f"Fetching data for {datetime}")
 

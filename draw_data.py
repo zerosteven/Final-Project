@@ -23,12 +23,18 @@ def fetch_data_temp(CACHE_FNAME,cache_dict, datetime, url):
     cache_dict = read_cache(CACHE_FNAME)
     r = requests.get(url)
     print(f"Fetching data for {datetime}")
-
     try:
         content = json.loads(r.text)
-        cache_dict[datetime] = int(content["data"]["weather"][0]["avgtempC"])
+        #cache_dict[datetime] = int(content["data"]["weather"][0]["avgtempC"])
+        cache_dict['windSpeed'] = content['data']['weather']['hourly'][3]['windspeedMiles']
+        cache_dict['Pressure'] = content['data']['weather']['hourly'][15]['pressure']
+        cache_dict['Humidity'] = content['data']['weather']['hourly'][11]['humidty']
+        cache_dict['Visibility'] = content['data']['weather']['hourly'][12]['humidty']
         write_cache(CACHE_FNAME, cache_dict)
         print("Data fetched\n--------------")
     except:
         print('Error when requesting url\n--------------')
         return None
+
+
+    

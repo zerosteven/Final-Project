@@ -31,14 +31,10 @@ class process_data:
         humidity_data = self.cache.read_cache(cachefile3)
         #pressureInches
         #temperature,windspeedMiles, humidity,visibility.
-        cur.execute(
-            f"CREATE TABLE IF NOT EXISTS {self.table1} (id TEXT PRIMARY KEY, temperature INTEGER)")
-        cur.execute(
-            f"CREATE TABLE IF NOT EXISTS {self.table2} (id TEXT PRIMARY KEY, wind_speed_in_miles INTEGER)")
-        cur.execute(
-            f"CREATE TABLE IF NOT EXISTS {self.table3} (id TEXT PRIMARY KEY, pressure_per-inches INTEGER,)")
-        cur.execute(
-            f"CREATE TABLE IF NOT EXISTS {self.table4} (id TEXT PRIMARY KEY, humidity INTEGER, visibility INTEGER)")
+        cur.execute(f"CREATE TABLE IF NOT EXISTS {self.table1} (id TEXT PRIMARY KEY, temperature INTEGER)")
+        cur.execute(f"CREATE TABLE IF NOT EXISTS {self.table2} (id TEXT PRIMARY KEY, wind_speed_in_miles INTEGER)")
+        cur.execute(f"CREATE TABLE IF NOT EXISTS {self.table3} (id TEXT PRIMARY KEY, pressure_per_inches INTEGER,)")
+        cur.execute(f"CREATE TABLE IF NOT EXISTS {self.table4} (id TEXT PRIMARY KEY, humidity INTEGER, visibility INTEGER)")
         
         for item in temp_data:
             id = item
@@ -49,24 +45,21 @@ class process_data:
         for item in wind_speed_in_miles_data:
             id = item
             wind_speed_in_miles = wind_speed_in_miles_data[item]
-            cur.execute(
-                f"INSERT OR IGNORE INTO {self.table2} (id, wind_speed_in_miles) VALUES (?,?)", (id, wind_speed_in_miles))
+            cur.execute(f"INSERT OR IGNORE INTO {self.table2} (id, wind_speed_in_miles) VALUES (?,?)", (id, wind_speed_in_miles))
         
         for item in humidity_data:
             id = item
-            pressure_per-inches = humidity_data[item]["pressure_per-inches"]
+            pressure_per_inches = humidity_data[item]["pressure_per_inches"]
             humidity = humidity_data[item]["humidity"]
             visibility = humidity_data[item["visibility"]]
-            cur.execute(
-                f"INSERT OR IGNORE INTO {self.tb_name_3} (id, pressure_per-inches) VALUES (?,?)", (id, pressure_per-inches))
-            cur.execute(
-                f"INSERT OR IGNORE INTO {self.tb_name_4} (id, humidity,visibility) VALUES (?,?,?)", (id, humidity,visibility))
+            cur.execute(f"INSERT OR IGNORE INTO {self.table3} (id, pressure_per_inches) VALUES (?,?)", (id, pressure_per_inches))
+            cur.execute(f"INSERT OR IGNORE INTO {self.table4} (id, humidity,visibility) VALUES (?,?,?)", (id, humidity,visibility))
         #use JOIN and fulfill the requirement(where tempeature is negative)
         cur.execute('DELETE FROM humidity_data WHERE humidity_data.id IN (SELECT humidity_data.id FROM humidity_data JOIN temp_data ON temp_data.id = humidity_data.id WHERE temp_data.temperature <= 0)')
         conn.commit()
 
 
-    def correlation_of_data(self, col1, col2,table1,table2, cur, conn):
+    def correlation_of_data(self, col1, col2, table1, table2, cur, conn):
         
         # get all data from specfic column and fetch it all 
         cur.execute(f'SELECT {col1} FROM {table1}')
@@ -98,13 +91,13 @@ class process_data:
         cur.execute(f'SELECT {col1} FROM {table1}')
         x1 = cur.fetchall()
         l0 = list()
-        for item in x:
+        for item in x1:
             l0.append(item[0])
 
-        cur.execute(f'SELECT {col1} FROM {tb1}')
+        cur.execute(f'SELECT {col2} FROM {table2}')
         x2 = cur.fetchall()
         l1 = list()
-        for item in y:
+        for item in x2:
             l1.append(item[0])
         conn.commit()
 
